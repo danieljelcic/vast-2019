@@ -1,3 +1,7 @@
+# To-Do
+
+# still something wrong with hashtags!!!!
+
 import numpy as np
 
 class User:
@@ -180,7 +184,7 @@ for i, user in enumerate(users.values()):
     users_export[i+1][1] = "{:.6f}".format(user.score)
 
 # export user score file
-np.savetxt("data/user_scores.csv", users_export, delimiter=",", fmt='%s')
+np.savetxt("user_scores.csv", users_export, delimiter=",", fmt='%s')
 
 # set rankings for posts
 for post in posts.values():
@@ -196,7 +200,7 @@ data_export[0] = ['time', 'location', 'user', 'post', 'post_score']
 for i, post in enumerate(posts.values()):
     data_export[i+1] = ['\"{0}\"'.format(post[0].time), '\"{0}\"'.format(locations[post[0].location]), '\"{0}\"'.format(post[0].user.name), '\"{0}\"'.format(post[0].body), '\"{0}\"'.format(str(post[0].score))]
 
-np.savetxt("data/data.csv", data_export, delimiter=",", fmt='%s', encoding='utf-8')
+np.savetxt("data.csv", data_export, delimiter=",", fmt='%s', encoding='utf-8')
 
 '''
 

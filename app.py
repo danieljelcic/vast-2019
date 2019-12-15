@@ -29,7 +29,7 @@ def query_db(query):
     DATABASE_URL = os.environ['DATABASE_URL']
 
     if DATABASE_URL == 'local':
-        conn = psycopg2.connect(host="localhost",database="postgres", user="postgres", password="290BostonAve")
+        conn = psycopg2.connect(host="localhost",database="vast_test", user="postgres", password="290BostonAve")
     else:
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 

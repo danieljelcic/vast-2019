@@ -68,7 +68,7 @@ class Hashtag:
         self.occurences.append(post)
 
 
-data = np.genfromtxt('../data/YInt.csv', delimiter='","', skip_header=1, dtype='str', encoding='utf-8', comments=None)
+data = np.genfromtxt('../static/data/YInt.csv', delimiter='","', skip_header=1, dtype='str', encoding='utf-8', comments=None)
 
 def clean_lt_double_quotes(data):
     for i in range(data.shape[0]):
@@ -184,7 +184,7 @@ for i, user in enumerate(users.values()):
     users_export[i+1][1] = "{:.6f}".format(user.score)
 
 # export user score file
-np.savetxt("user_scores.csv", users_export, delimiter=",", fmt='%s')
+# np.savetxt("../static/data/user_scores.csv", users_export, delimiter=",", fmt='%s')
 
 # set rankings for posts
 for post in posts.values():
@@ -200,28 +200,65 @@ data_export[0] = ['time', 'location', 'user', 'post', 'post_score']
 for i, post in enumerate(posts.values()):
     data_export[i+1] = ['\"{0}\"'.format(post[0].time), '\"{0}\"'.format(locations[post[0].location]), '\"{0}\"'.format(post[0].user.name), '\"{0}\"'.format(post[0].body), '\"{0}\"'.format(str(post[0].score))]
 
-np.savetxt("data.csv", data_export, delimiter=",", fmt='%s', encoding='utf-8')
-
-'''
-
-user ranking
-
-- count total num of reposts for each post of each user
-- count total num of mentions
-- add those two up
-- find the max
-- scale based on the max
+# np.savetxt("../static/data/data.csv", data_export, delimiter=",", fmt='%s', encoding='utf-8')
 
 
-post ranking
+sent_data = np.genfromtxt('../static/data/sentiment-data.csv', delimiter=', ', dtype='float', encoding='utf-8', comments=None)
 
-- for each post
-    - get length of reposts
-    - scale based on user rating --> num_reposts * (1 + user_ranking)
+posts_sql = ''
+posts_list = list(posts.values())
+repost_i = 0
+reposts_sql = ''
+hashtag_i = 0
+hashtags_sql = ''
 
-new data set
+for i in range(len(posts_list)):
+    post = posts_list[i]
+    posts_sql += '(\n\t{0},\n\t\'{1}\',\n\t\'{2}\',\n\t\'{3}\',\n\t{4},\n\t\'{5}\',\n\t{6},\n\t{7},\n\t{8},\n\t{9}\n),'.format(
+        i,
+        post[0].time,
+        locations[post[0].location],
+        post[0].user.name.replace('\'', '\'\''),
+        post[0].user.score,
+        post[0].body.replace('\'', '\'\''),
+        post[0].score,
+        len(post[0].reposts),
+        sent_data[i][0],
+        sent_data[i][1]
+        # ',' if i + 1 < 3 else ''
+    )
 
-time | location | user | post | post_score
+    for repost in post[0].reposts:
+
+        reposts_sql += '(\n\t{0},\n\t{1},\n\t\'{2}\',\n\t\'{3}\',\n\t\'{4}\',\n\t{5}\n),'.format(
+            repost_i,
+            i,
+            repost.timestamp,
+            locations[repost.location],
+            repost.user.name.replace('\'', '\'\''),
+            repost.user.score
+            # ',' if i + 1 < 3 else ''
+        )
+
+        repost_i += 1
+
+    for hashtag in post[0].hashtags:
+
+        hashtags_sql += '(\n\t{0},\n\t{1},\n\t\'{2}\',\n\t\'{3}\',\n\t\'{4}\',\n\t\'{5}\',\n\t{6}\n),'.format(
+            hashtag_i,
+            i,
+            hashtag.replace('\'', '\'\''),
+            post[0].time,
+            locations[post[0].location],
+            post[0].user.name.replace('\'', '\'\''),
+            post[0].user.score
+            # ',' if i + 1 < 3 else ''
+        )
+
+        hashtag_i += 1
 
 
-'''
+# with open('sql_insert.sql', 'w+', encoding="utf-8") as sqlf:
+#     sqlf.write('INSERT INTO posts (ID, timestmp, neighbourhood, username, user_score, post_text, post_score, num_reposts, sent_score, sent_magnitude)\n VALUES\n{0}\n\n'.format(posts_sql))
+#     sqlf.write('INSERT INTO repost_occurences (ID, post_ID, timestmp, neighbourhood, username, user_score)\n VALUES\n{0}\n\n'.format(reposts_sql))
+#     sqlf.write('INSERT INTO hashtag_occurences (ID, post_ID, contents, timestmp, neighbourhood, username, user_score)\n VALUES\n{0}'.format(hashtags_sql))

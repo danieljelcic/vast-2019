@@ -5,7 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://d3js.org/d3.v4.min.js"></script>
-    <script src="main.js"></script>
+    <script>
+        
+    var asyncRequest = function(url, query, cbfun) {
+
+        var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+        var fetchData = {
+            method : 'POST',
+            body : JSON.stringify({'query' : query}),
+            headers : headers
+        }
+
+        console.log("fetching");
+        fetch(url, fetchData)
+            .then((resp) => resp.json())
+            .then(function(data) {
+                console.log("fetching done!");
+                cbfun(data);
+            })
+            .catch(function (error) {
+                console.log('Error: ' + Error);
+            });
+    };
+
+    var cb = function(data) {
+        console.log(data);
+    }
+
+    asyncRequest('/data', 'SELECT * FROM posts', cb);
+
+
+    </script>
     <title>Test</title>
 </head>
 <body>

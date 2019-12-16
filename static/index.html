@@ -11,19 +11,90 @@
     <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,600,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/main.css">
 </head>
-<body id="mainBody">
+<body id="mainBody" onload="initSystem()">
+    <div id="loading">
+        <div id="loadingInner">
+            <div class="loader"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
     <div id="main">
         <div id="titleHeader">
             <h2>YInt Distaster Relief Portal</h2>
         </div>
+        <div id="tabNav">
+                <div id="mapTabButton" class="tabButton"><div class="tabButtonText"><a>Map</a></div></div>
+                <div id="postTabButton" class="tabButton"><div class="tabButtonText"><a>Post</a></div></div>
+                <div id="hashtagTabButton" class="tabButton"><div class="tabButtonText"><a>Tag</a></div></div>
+            </div>
         <div id="tabs">
-                <p>This where all that good shits gon go.</p>
+            <div class="visDivWrapper">
+                <div id="mapVisDiv" class="visDiv">
+                    <p>Pretend this is a map</p>
+                </div>
+            </div>
+            <div class="visDivWrapper">
+                <div id="postVisDiv" class="visDiv">
+                    <p>Pretend this is a post vis</p>
+                </div>
+            </div>
+            <div class="visDivWrapper">
+                <div id="hashtagVisDiv" class="visDiv">
+                    <p>Pretend this is a hashtag vis</p>
+                </div>
+            </div>
         </div>
         <div id="brushPanel"></div>
     </div>
     <div id="sidebar">
-        <div id="testSlider" style="width:400pt; display: inline-block"></div>
+        <div class="filterWrapper">
+            <div class="filter" id="searchFilter">
+                <form id="searchFilterInput">
+                    <input type="text" placeholder="Search by keyword">
+                </form>
+                <p id="clearKeywordsButton">Clear</p>
+                <ul class="verticalScrollingList" id="keywordList">
+                    <!-- <li><div class="keywordClearButton">X</div><div class="keywordText">Keyword 1</div></li>
+                    <li><div class="keywordClearButton">X</div><div class="keywordText">Keyword 2</div></li>
+                    <li><div class="keywordClearButton">X</div><div class="keywordText">Keyword 3</div></li> -->
+                </ul>
+            </div>
+        </div>
+        <div class="filterWrapper">
+            <h3 class="filterTitle">Neighbourhood</h3>
+            <div class="filter" id="neighbourhoodFiler">
+                <ul class="verticalScrollingList">
+                    <!-- <li><input type="checkbox">Neighbourhood 1</li> 
+                    <li><input type="checkbox">Neighbourhood 2</li>  -->
+                </ul>
+            </div>
+        </div>
+        <div class="filterWrapper">
+            <h3 class="filterTitle">Relevance</h3>
+            <div class="filter" id="relevanceFiler">
+                    <h4 class="filterSubtitle">User</h4>
+                    <div class="sliderWrapper">
+                        <div id="relevaceUserSlider" class="slider"></div>
+                    </div><br>
+                    <h4 class="filterSubtitle">Post</h4>
+                    <div class="sliderWrapper">
+                        <div id="relevacePostSlider" class="slider"></div>
+                    </div>
+            </div>
+        </div>
+        <div class="filterWrapper">
+            <h3 class="filterTitle">Sentiment</h3>
+            <div class="filter" id="sentFilter">
+                <input type="checkbox" checked=checked value='pos' class="spCheckbox" id="spCheckboxPos">^
+                <input type="checkbox" checked=checked value='neg' class="spCheckbox" id="spCheckboxNeg">V
+                <div class="sliderWrapper">
+                    <div id="sentimentSlider" class="slider"></div>
+                </div>
+            </div>
+        </div>
+
     </div>
     <script src="static/main.js"></script>
+    <script src="static/elems.js"></script>
 </body>
 </html>

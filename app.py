@@ -23,12 +23,25 @@ def db_connect():
     print(request.content_type)
 
     query = request.json['query'] if request.is_json else "Sorry :("
-    return query if not request.is_json else query_db(query)
+    print('query:', query)
+    response = query_db(query)
+    print('successfuly got a response')
+    return query if not request.is_json else response
 
 @app.route('/test', methods=['GET'])
 def test_get():
     print('In test get')
-    return "Successfully returning get request response"
+    response = json.dumps({ 'res': request.args.get('query')})
+    print(response)
+    return response
+
+@app.route('/test_post', methods=['POST'])
+def test_post():
+    print('In test get')
+    query = request.json['query'] if request.is_json else "Sorry :("
+    response = json.dumps({ 'res': query})
+    print(response)
+    return response
 
 # returns json
 def query_db(query):

@@ -9,18 +9,23 @@ p {
     font-weight: 400;
 }
 
+#testSlider {
+    display: none;
+}
+
 #main {
-    width: 70%;
+    width: 75%;
     height: 100%;
     float: left;
 }
 
 #sidebar {
-    width: 30%;
-    height: 100%;
+    width: calc(25% - 50px);
+    height: calc(100% - 50px);
     overflow: hidden;
     float: left;
-    background-color: lightyellow;
+    background-color: rgb(250, 250, 250);
+    padding: 25px;
 }
 
 #titleHeader {
@@ -28,22 +33,234 @@ p {
     height: 10%;
     overflow: hidden;
     padding: 0px 20px;
+    float: left;
 }
 
 #tabs {
-    width: 100%;
+    width: 93%;
     height: 75%;
-    overflow: auto;
-    padding: 0px 40px;
+    overflow: hidden;
+    float: left;
 }
 
 #brushPanel {
     width: 100%;
     height: 15%;
     background-color: lightblue;
+    float: left;
 }
 
-#testSlider {
-    margin: 40px 30px;
-    width: 60% !important;
+#tabNav {
+    width: 7%;
+    height: 75%;
+    float: left;
+    float: left;
 }
+
+.visDivWrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.visDiv {
+    padding : 16px;
+    height: 100%;
+}
+
+/* #mapVisDiv {
+    background-color: red;
+}
+
+#postVisDiv {
+    background-color: green;
+}
+
+#hashtagVisDiv {
+    background-color: blue;
+} */
+
+.tabButton {
+    width: 100%;
+    height: 33.33%;
+}
+
+.tabButton > .tabButtonText {
+    position: relative;
+    transform: rotate(-90deg);
+    top: 10%;
+    left: -20%;
+    margin-left: 10px;
+    font-size: 1.3rem;
+    user-select: none;
+}
+
+.tabButton > .tabButtonText:hover {
+    font-weight: 700;
+}
+
+.tabButtonActive {
+    color: rgb(150, 14, 14);
+    font-weight: 700;
+}
+
+.filterSubtitle {
+    display: inline-block;
+    margin: 5px 0px;
+}
+
+#relevanceFiler > div {
+    display: inline-block;
+    width: 70%;
+    position: relative;
+    /* top: 15px; */
+}
+
+.verticalScrollingList > li {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: rgb(231, 187, 187);
+    border-radius: 15px;
+    margin-right: 5px;
+    font-size: 0.8rem;
+}
+
+.verticalScrollingList > li > div {
+    display: inline;
+}
+
+.verticalScrollingList > li > .keywordClearButton {
+    margin-right: 7px;
+}
+
+.verticalScrollingList {
+    padding: 0px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+}
+
+.verticalScrollingList::-webkit-scrollbar {
+    display: none;
+  }
+
+#searchFilter > form > input {
+    width: calc(100% - 50px);
+    padding: 10px 15px;
+    outline: none;
+    border: 1px solid lightgrey;
+}
+
+#neighbourhoodFiler > .verticalScrollingList > li {
+    background-color: rgb(212, 237, 245);
+}
+
+.filterTitle {
+    font-size: 1.1rem;
+    margin: 7px 0px;
+}
+
+#sentFilter > div > .slider {
+    width: 100%;
+    position: relative;
+    top:15px;
+}
+
+#sentFilter > input {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.sliderWrapper {
+    width: 100%;
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+.sliderWrapper > div {
+    width: 90% !important;
+    height: 7px;
+    background-color: lightgrey;
+    outline: none;
+    border: none;
+    box-shadow: none;
+    margin-left: 15px;
+}
+
+.sliderWrapper > .noUi-target {
+    border-radius: 0px !important;
+}
+
+.sliderWrapper > div > .noUi-base > .noUi-origin > .noUi-handle {
+    background-color:  rgb(150, 14, 14);
+    border: none;
+    box-shadow: none;
+    border-radius: 0px !important;
+    height: 7px;
+    color: yellow;
+    top: 50%;
+    right: 0%;
+    width: 5px;
+}
+    
+.sliderWrapper > div > .noUi-base > .noUi-origin > .noUi-handle > .noUi-tooltip {
+    position: relative;
+    top: -2px;
+    width: 100px;
+    background: none;
+    border: none;
+    font-size: 0.6rem;
+}
+
+.sliderWrapper > div > .noUi-base > .noUi-origin > .noUi-handle::before,
+.sliderWrapper > div > .noUi-base > .noUi-origin > .noUi-handle::after {
+    display: none !important;
+}
+
+.noUi-touch-area::selection {
+    outline: none;
+}
+
+#clearKeywordsButton {
+    user-select: none;
+    display: none;
+    font-size: 0.8rem;
+    margin: 3px 0px;
+}
+
+#clearKeywordsButton:hover {
+    font-weight: 500;
+}
+
+
+/**************   loader   *************/
+
+#loading {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.411);
+    position: fixed;
+    z-index: 9999999;
+    font-weight: 500;
+    display: none;
+}
+
+#loadingInner {
+    width: 70px;
+    margin: 0 auto;
+    position: relative;
+    top: 40%;
+}
+
+.loader {
+    border: 10px solid #f3f3f33f; /* Light grey */
+    border-top: 10px solid rgb(150, 14, 14); /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

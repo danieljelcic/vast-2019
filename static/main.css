@@ -219,6 +219,10 @@ p {
     position: relative;
     left: 70px;
 }
+
+#timeSlider > .noUi-base > .noUi-connects > .noUi-connect {
+    background-color: rgba(150, 14, 14, 0.411);
+}
     
 .sliderWrapper > div > .noUi-base > .noUi-origin > .noUi-handle > .noUi-tooltip {
     position: relative;
@@ -247,6 +251,11 @@ p {
 
 #clearKeywordsButton:hover {
     font-weight: 500;
+}
+
+#postVis {
+    width: 200px;
+    height: 100px;
 }
 
 

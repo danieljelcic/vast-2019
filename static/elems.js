@@ -48,6 +48,8 @@ var repostCB = function (data) {
     // renderPosts(data);
     console.log("got reposts!");
     console.log(data);
+    document.getElementById("postVis").innerHTML = "";
+    renderPostData("postVis", data);
     endLoadingDisplay();
 }
 

@@ -81,7 +81,6 @@ var runQuery = function (url, query, cbfun) {
 
 	fetch(url, fetchData)
 		.then(function (resp) {
-			console.log(">>>>>>>> might be problem with JSON");
 			return resp.json();
 		})
 		.then(function(data) {
@@ -405,11 +404,12 @@ var filterCB = function(data) {
 
 	// runQuery('/data', constructHashtagsSQL(), hashtagCB);
 	endLoadingDisplay();
+	document.getElementById("mapVis").innerHTML = "";
+	renderMapData("mapVis", all_data);
 }
 
 var hashtagCB = function(data) {
 	hashtag_data = data;
-	// drawMap(all_data, "mapVis");
 	endLoadingDisplay();
 }
 

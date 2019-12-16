@@ -7,9 +7,160 @@
     <title>Post Data</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+    <style>
+
+    h1{
+        text-align: center;
+    }
+
+    h1, h3{
+        font-family: sans-serif;
+    }
+    p{ 
+        font-family: sans-serif;
+        font-size: 18px;
+    }
+    .bar{fill: #FFAA32;}
+    </style>
+
 </head>
 <body>
     <h1>POST DATA</h1>
-    <div id="post-text" style="width: 300; height: 200;"></div>
-    <div id="post-viz">
+    <h3>Post text</h3><div id="post-text"></div>
+    <h3>Repost Activity per Neighbourhood</h3>
+    <div id="post-viz"></div>
+    <script>
+
+    var repost_data;
+    var post_data = null;
+    var nbrhoods = ["Palace Hills","Northwest", "Old Town", "Safe Town", "Southwest", "Downtown", "Wilson Forest", "Scenic Vista", "Broadview", "Chapparal", "Terrapin Springs", "Cheddarford", "Easton", "Weston", "Southton", "Oak Willow", "East Parton", "West Parton"];
+
+    var runQuery = function (query, cbfun) {
+    console.log("in runQuery: query is " + query);
+
+    var url = '/data';
+
+    var headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    var fetchData = {
+        method : 'POST',
+        body : JSON.stringify({'query' : query}),
+        headers : headers
+    }
+
+    fetch(url, fetchData)
+        .then((resp) => resp.json())
+        .then(function(data) {
+            cbfun(data);
+        })
+        .catch(function (error) {
+            console.log('Error:' + error);
+        });
+
+    console.log('After fetch call');
+
+    }
+        var constructSQL = function() {
+            return `SELECT * FROM repost_occurences WHERE post_ID = ${6942}`;
+        }
+
+        var constructSQL_post = function(id) {
+            return `SELECT * FROM posts WHERE ID = ${id}`;
+        }
+
+        var createviz = function(data) {
+            var repost_data = data;
+            var postID = data[0].post_id;
+
+            var get_post = function(pdata){
+                post_data = pdata;
+                
+                post_text(post_data);
+                create(repost_data);
+            }
+            runQuery(constructSQL_post(postID),get_post);
+        }
+
+        runQuery(constructSQL(), createviz);
+
+        var post_text = function(data){
+
+            var node = document.createElement("P");        
+            var textnode = document.createTextNode(`${data[0].post_text}`); 
+            node.appendChild(textnode);
+
+            document.getElementById("post-text").appendChild(node);
+        }
+
+        var create = function(repost_data){
+            var categories =[];
+
+            console.log("res", repost_data)
+
+             nbrhoods.forEach((element) =>{
+                var val = {}
+                val["occurences"] = 0;
+                val["nbrhood"] = element;
+                categories.push(val)
+            });
+
+            repost_data.forEach((element) => {
+                categories.forEach((marker, i) => {
+
+                if(categories[i][`nbrhood`] == element.neighbourhood){
+                    categories[i].occurences++;
+                }
+            })
+
+            });
+            console.log("cat", categories)
+
+            //--------------- BEGIN D3 ---------
+            var data = categories;
+
+            var margin = {top: 20, right: 20, bottom: 30, left: 40},
+                width = 1500 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+                // set the ranges
+                var x = d3.scaleBand()
+                        .range([0, width])
+                        .padding(0.1);
+
+                var y = d3.scaleLinear()
+                        .range([height, 0]);
+
+                var svg = d3.select("#post-viz").append("svg")
+                            .attr("width", width + margin.left + margin.right)
+                            .attr("height", height + margin.top + margin.bottom)
+                            .append("g")
+                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        
+                x.domain(data.map(function(d) { return d.nbrhood; }));
+                y.domain([0, d3.max(data, function(d) { return d.occurences; })]);
+
+
+                svg.selectAll(".bar")
+                    .data(data)
+                    .enter().append("rect")
+                    .attr("class", "bar")
+                    .attr("x", function(d) { return x(d.nbrhood); })
+                    .attr("width", x.bandwidth())
+                    .attr("y", function(d) { return y(d.occurences); })
+                    .attr("height", function(d) { return height - y(d.occurences); });
+
+                // add the x Axis
+                svg.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x));
+
+                // add the y Axis
+                svg.append("g")
+                    .call(d3.axisLeft(y));
+            }
+    
+    </script>
+
 </body>

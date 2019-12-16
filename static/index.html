@@ -25,12 +25,11 @@
         <div id="tabNav">
                 <div id="mapTabButton" class="tabButton"><div class="tabButtonText"><a>Map</a></div></div>
                 <div id="postTabButton" class="tabButton"><div class="tabButtonText"><a>Post</a></div></div>
-                <div id="hashtagTabButton" class="tabButton"><div class="tabButtonText"><a>Tag</a></div></div>
+                <div id="hashtagTabButton" class="tabButton"><div class="tabButtonText" style="text-decoration: line-through"><a>Tag</a></div></div>
             </div>
         <div id="tabs">
             <div class="visDivWrapper">
                 <div id="mapVisDiv" class="visDiv">
-                    <p>Pretend this is a map</p>
                     <div id="mapVis"></div>
                 </div>
             </div>
@@ -43,7 +42,7 @@
             <div class="visDivWrapper">
                 <div id="hashtagVisDiv" class="visDiv">
                         <h2 id="hashtagBodyTitle"></h2>
-                        <div id="hashtagVis"></div>
+                        <div id="hashtagVis">Under construction. Come back soon.</div>
                 </div>
             </div>
         </div>
@@ -101,6 +100,9 @@
         </div>
 
     </div>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="static/map.js"></script>
+    <script src="static/post.js"></script>
     <script src="static/elems.js"></script>
     <script src="static/main.js"></script>
 </body>

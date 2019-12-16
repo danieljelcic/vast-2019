@@ -5,6 +5,7 @@ import json
 from psycopg2.extras import RealDictCursor
 from datetime import date, datetime
 import decimal
+import json
 
 app = Flask(__name__)
 
@@ -20,9 +21,14 @@ def favicon():
 @app.route('/data', methods=['POST'])
 def db_connect():
     print(request.content_type)
-    query = request.form.get('query')
-    print(query)
-    return "Sorry :(" if query == None else query_db(query)
+
+    query = request.json['query'] if request.is_json else "Sorry :("
+    return query if not request.is_json else query_db(query)
+
+@app.route('/test', methods=['GET'])
+def test_get():
+    print('In test get')
+    return "Successfully returning get request response"
 
 # returns json
 def query_db(query):

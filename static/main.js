@@ -10,11 +10,39 @@ var endLoadingDisplay = function() {
 	document.getElementById('loading').style.display = 'none';
 }
 
+var getDateString = function(date) {
+
+	var year = date.getFullYear();
+	var month = date.getMonth() + 1;
+	var day = date.getDate();
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+	var seconds = date.getSeconds();
+
+	if (month < 10) {
+		month = '0' + month;
+	}
+	if (day < 10) {
+		day = '0' + day;
+	}
+	if (hours < 10) {
+		hours = '0' + hours;
+	}
+	if (minutes < 10) {
+		minutes = '0' + minutes;
+	}
+	if (seconds < 10) {
+		seconds = '0' + seconds;
+	}
+	
+	return minDateString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 
 /////////////////////////////////////////////////////////////
 // query stuff
 
 var all_data;
+var hashtag_data;
 
 var filterData = {
 	'sentimentSlider' : {
@@ -30,8 +58,8 @@ var filterData = {
 		'max' : 0
 	},
 	'timestmp' : {
-		'min' : 0,
-		'max' : 0
+		'min' : '0',
+		'max' : '0'
 	},
 	'keywords' : [],
 	'neighbourhoods' : [],
@@ -72,14 +100,6 @@ var runPostsQuery = function (query, cbfun) {
 	runQuery('/data', query, cbfun);
 }
 
-var postQueryCB = function(data) {
-	// put data into tab body
-}
-
-var constructSQL_posts = function() {
-	return `SELECT * FROM posts WHERE sent_score > ${min} AND sent_score < ${max}`
-}
-
 var constructPostsSQL = function() {
 	query = "SELECT * FROM posts WHERE ";
 
@@ -89,8 +109,8 @@ var constructPostsSQL = function() {
 	query += `post_score <= ${filterData.relevacePostSlider.max} AND `;
 	query += `user_score >= ${filterData.relevaceUserSlider.min} AND `;
 	query += `user_score <= ${filterData.relevaceUserSlider.max} AND `;
-	// query += `timestmp >= ${filterData.timestmp.min} AND `;
-	// query += `timestmp <= ${filterData.timestmp.max} AND `;
+	query += `timestmp >= '${filterData.timestmp.min}' AND `;
+	query += `timestmp <= '${filterData.timestmp.max}' AND `;
 	query += `neighbourhood IN (`;
 
 	filterData.neighbourhoods.forEach(function(value, index) {
@@ -117,6 +137,27 @@ var constructPostsSQL = function() {
 			query += `sent_score >= -1 AND sent_score <0`;
 			break;
 	}
+
+	return query;
+}
+
+var constructHashtagsSQL = function() {
+	query = "SELECT * FROM hashtag_occurences WHERE ";
+
+	query += `user_score >= ${filterData.relevaceUserSlider.min} AND `;
+	query += `user_score <= ${filterData.relevaceUserSlider.max} AND `;
+	query += `timestmp >= '${filterData.timestmp.min}' AND `;
+	query += `timestmp <= '${filterData.timestmp.max}' AND `;
+	query += `neighbourhood IN (`;
+
+	filterData.neighbourhoods.forEach(function(value, index) {
+		query += `\'${value}\'`;
+		if ( index + 1 < filterData.neighbourhoods.length) {
+			query += ', ';
+		}
+	});
+
+	query += ')';
 
 	return query;
 }
@@ -155,8 +196,8 @@ var initFilters = async function() {
 				'max' : data.max_sm
 			},
 			'timestmp' : {
-				'min' : data.min_t,
-				'max' : data.max_t
+				'min' : getDateString(new Date(Date.parse(data.min_t))),
+				'max' : getDateString(new Date(Date.parse(data.max_t)))
 			},
 			'relevaceUserSlider' : {
 				'min' : data.min_us,
@@ -203,6 +244,39 @@ var initFilters = async function() {
 				console.log(filterData);
 				runPostsQuery(constructPostsSQL(), filterCB);
 			});
+		});
+
+		timeSlider = document.getElementById("timeSlider");
+		
+		var timeMin = Math.floor(Date.parse(extremes["timestmp"].min));
+		var timeMax = Math.floor(Date.parse(extremes["timestmp"].max));
+
+		console.log("timeMin: " + timeMin);
+
+
+		noUiSlider.create(timeSlider, {
+			start: [timeMin, timeMax],
+			connect: true,
+			tooltips: false,
+			range: {
+					'min': timeMin,
+					'max': timeMax
+				}
+		});
+
+		// listener implemented here, didn't work outside
+		timeSlider.noUiSlider.on('change', function() {
+
+			var values = timeSlider.noUiSlider.get();
+			min = values[0];
+			max = values[1];
+			console.log(`New query: ${min} - ${max}`);
+			var minDate = new Date(Math.floor(min));
+			var maxDate = new Date(Math.floor(max));
+			extremes["timestmp"].min = getDateString(minDate);
+			extremes["timestmp"].max = getDateString(maxDate);
+			console.log(filterData);
+			runPostsQuery(constructPostsSQL(), filterCB);
 		});
 
 		d3.selectAll(".nbCheckbox").on("change", neighbourhoodsListener);
@@ -326,7 +400,16 @@ var timeBrushListener = function() {
 
 var filterCB = function(data) {
 	console.log(`Got ${data.length} rows`);
+	all_data = data;
 	// document.getElementById("mapVisDiv").innerHTML = JSON.stringify(data);
+
+	// runQuery('/data', constructHashtagsSQL(), hashtagCB);
+	endLoadingDisplay();
+}
+
+var hashtagCB = function(data) {
+	hashtag_data = data;
+	// drawMap(all_data, "mapVis");
 	endLoadingDisplay();
 }
 

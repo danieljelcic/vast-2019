@@ -31,20 +31,27 @@
             <div class="visDivWrapper">
                 <div id="mapVisDiv" class="visDiv">
                     <p>Pretend this is a map</p>
+                    <div id="mapVis"></div>
                 </div>
             </div>
             <div class="visDivWrapper">
                 <div id="postVisDiv" class="visDiv">
-                    <p>Pretend this is a post vis</p>
+                    <h2 id="postBodyTitle"></h2>
+                    <div id="postVis"></div>
                 </div>
             </div>
             <div class="visDivWrapper">
                 <div id="hashtagVisDiv" class="visDiv">
-                    <p>Pretend this is a hashtag vis</p>
+                        <h2 id="hashtagBodyTitle"></h2>
+                        <div id="hashtagVis"></div>
                 </div>
             </div>
         </div>
-        <div id="brushPanel"></div>
+        <div id="brushPanel">
+            <div class="sliderWrapper">
+                <div id="timeSlider" class="slider"></div>
+            </div><br>
+        </div>
     </div>
     <div id="sidebar">
         <div class="filterWrapper">
@@ -94,7 +101,7 @@
         </div>
 
     </div>
-    <script src="static/main.js"></script>
     <script src="static/elems.js"></script>
+    <script src="static/main.js"></script>
 </body>
 </html>

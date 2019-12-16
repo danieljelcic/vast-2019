@@ -31,15 +31,33 @@ var onTabButtonClick = function(event) {
 
     switch(this.innerText) {
         case "Map":
-            newActiveTab = 0;
+            switchToMapTab();
             break;
         case "Post":
-            newActiveTab = 1;
+            var topPost = getTopPost(all_data);
+            runQuery('/data', `SELECT * FROM repost_occurences WHERE post_id = ${topPost.id}`, repostCB)
+            switchToPostTab(topPost.post_text);
             break;
         case "Tag":
-            newActiveTab = 2;
+            switchToHashtagTab(0);
             break;
     }
+}
+
+var repostCB = function (data) {
+    // renderPosts(data);
+    console.log("got reposts!");
+    console.log(data);
+    endLoadingDisplay();
+}
+
+mapTabButton.addEventListener('click', onTabButtonClick);
+postTabButton.addEventListener('click', onTabButtonClick);
+hashtagTabButton.addEventListener('click', onTabButtonClick);
+
+
+var switchToMapTab = function() {
+    var newActiveTab = 0;
 
     if (newActiveTab == activeTab) {
         return;
@@ -53,18 +71,52 @@ var onTabButtonClick = function(event) {
 
     tabFunctions[activeTab]();
 }
+var switchToPostTab = function(post_text) {
+    var newActiveTab = 1;
 
-mapTabButton.addEventListener('click', onTabButtonClick);
-postTabButton.addEventListener('click', onTabButtonClick);
-hashtagTabButton.addEventListener('click', onTabButtonClick);
+    if (newActiveTab == activeTab) {
+        return;
+    }
 
+    tabButtons[activeTab].classList.remove('tabButtonActive');
+    activeTab = newActiveTab;
+    tabButtons[activeTab].classList.add('tabButtonActive');
 
-var switchToMapTab = function() {
-    mapTabButton.click();
+    document.getElementById("postBodyTitle").innerText = `"${post_text}"`;
+
+    tabs[activeTab].scrollIntoView({behavior: 'smooth' });
+
+    tabFunctions[activeTab]();
 }
-var switchToPostTab = function() {
-    postTabButton.click();
+var switchToHashtagTab = function(hashtagID) {
+    var newActiveTab = 2;
+
+    if (newActiveTab == activeTab) {
+        return;
+    }
+
+    tabButtons[activeTab].classList.remove('tabButtonActive');
+    activeTab = newActiveTab;
+    tabButtons[activeTab].classList.add('tabButtonActive');
+
+    // var hashtagText = all_data[0]["post_text"];
+    // document.getElementById("postBodyTitle").innerText = `"${postText}"`;
+
+    tabs[activeTab].scrollIntoView({behavior: 'smooth' });
+
+    tabFunctions[activeTab]();
 }
-var switchToHashtagTab = function() {
-    hashtagTabButton.click();
+
+var getTopPost = function(all_data) {
+    var maxScore = 0;
+    var postObj = all_data[0];
+
+    all_data.forEach(function(post) {
+        if (post.post_score > maxScore) {
+            maxScore = post.post_score;
+            postObj = post;
+        }
+    });
+
+    return postObj;
 }

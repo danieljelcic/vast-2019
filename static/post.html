@@ -7,15 +7,16 @@
     <title>Post Data</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src ="static/StackedAreaChart.js"></script>
 </head>
 <body>
     <h1>POST DATA</h1>
     <div id="post-text" style="width: 300; height: 200;"></div>
     <div id="post-viz"></div>
 
-     <script>
-     
-     var runQuery = function (query, cbfun) {
+    <script>
+
+    var runQuery = function (query, cbfun) {
 	console.log("in runQuery: query is " + query);
 
 	var url = '/data';
@@ -42,6 +43,8 @@
 
     }
 
+        var nbrhoods = ["Palace Hills","Northwest", "Old Town", "Safe Town", "Southwest", "Downtown", "Wilson Forest", "Scenic Vista", "Broadview", "Chapparal", "Terrapin Springs", "Cheddarford", "Easton", "Weston", "Southton", "Oak Willow", "East Parton", "West Parton"];
+
 
         var constructSQL = function() {
             return `SELECT * FROM repost_occurences WHERE post_ID = ${6942}`;
@@ -64,7 +67,7 @@
                 console.log(post_data)
 
                 post_text(post_data);
-                create(post_data, repost_data);
+                create(repost_data);
             }
             runQuery(constructSQL_post(postID),get_post);
         }
@@ -80,8 +83,28 @@
             document.getElementById("post-text").appendChild(node);
         }
 
-        var create = function(post_data, repost_data){
-            layers = {}
+        var create = function(repost_data){
+            var layers = []
+            var categories =[];
+
+            repost_data.forEach((element, i) =>{
+                categories[i]= {};
+                nbrhoods.forEach(element =>{
+                    categories[i][`${element}`] = 0;
+                })
+                categories[i][`Year`] = "";
+            });
+
+
+            repost_data.forEach((element, i) => {
+                var year = new Date(element.timestmp.toString());
+                
+                categories[i][`${element.neighbourhood}`]++;
+                categories[i][`Year`] = year;
+            });
+
+            layers.push(categories)
+            console.log(categories)
             areachart = new StackedAreaChart("post-viz", layers);
         }
      

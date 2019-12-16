@@ -11,5 +11,80 @@
 <body>
     <h1>POST DATA</h1>
     <div id="post-text" style="width: 300; height: 200;"></div>
-    <div id="post-viz">
+    <div id="post-viz"></div>
+
+     <script>
+     
+     var runQuery = function (query, cbfun) {
+	console.log("in runQuery: query is " + query);
+
+	var url = '/data';
+
+	var headers = new Headers();
+	headers.append('Content-Type', 'application/json');
+
+	var fetchData = {
+		method : 'POST',
+		body : JSON.stringify({'query' : query}),
+		headers : headers
+	}
+
+	fetch(url, fetchData)
+		.then((resp) => resp.json())
+		.then(function(data) {
+			cbfun(data);
+		})
+		.catch(function (error) {
+			console.log('Error: ' + Error);
+		});
+
+	console.log('After fetch call');
+
+    }
+
+
+        var constructSQL = function() {
+            return `SELECT * FROM repost_occurences WHERE post_ID = ${6942}`;
+        }
+
+
+        var constructSQL_post = function(id) {
+            return `SELECT * FROM posts WHERE ID = ${6942}`;
+        }
+
+        var createviz = function(data) {
+            var repost_data = data;
+            console.log(data)
+
+            var postID = data[0].post_id;
+            var post_data = null;
+
+            var get_post = function(pdata){
+                post_data = pdata
+                console.log(post_data)
+
+                post_text(post_data);
+                create(post_data, repost_data);
+            }
+            runQuery(constructSQL_post(postID),get_post);
+        }
+        runQuery(constructSQL(), createviz);
+
+
+        var post_text = function(data){
+
+            var node = document.createElement("H2");        
+            var textnode = document.createTextNode(`${data[0].post_text}`); 
+            node.appendChild(textnode);
+
+            document.getElementById("post-text").appendChild(node);
+        }
+
+        var create = function(post_data, repost_data){
+            layers = {}
+            areachart = new StackedAreaChart("post-viz", layers);
+        }
+     
+     
+     </script>
 </body>

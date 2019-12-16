@@ -31,6 +31,7 @@ def db_connect():
     print(request.content_type)
 
     query = request.json['query'] if request.is_json else "Sorry :("
+    print(query)
     return query if not request.is_json else query_db(query)
 
 @app.route('/test', methods=['GET'])

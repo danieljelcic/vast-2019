@@ -287,7 +287,39 @@ var initFilters = async function() {
 		runPostsQuery(constructPostsSQL(), filterCB);
 	});
 
+
 	
+}
+
+var updatePostsList = function(data) {
+	
+	var postsList = document.getElementById("postsList");
+	postsList.innerHTML = "";
+
+	data.sort(function(first, second) {
+		return second.post_score - first.post_score;
+	});
+
+	data.forEach(function(value, index) {
+
+		if (index > 50) {
+			return;
+		}
+
+		var entry = document.createElement('li');
+		entry.appendChild(document.createTextNode(`${value.post_score.toFixed(3)} | ${value.post_text}`));
+		postsList.appendChild(entry);
+
+		// console.log("before posts list on click")
+		// console.log(postsList.childNodes[postsList.childNodes.length - 1]);
+
+		postsList.childNodes[postsList.childNodes.length - 1].addEventListener('click', function(event) {
+			console.log("in posts list on click")
+			console.log(postsList.childNodes);
+            runQuery('/data', `SELECT * FROM repost_occurences WHERE post_id = ${value.id}`, repostCB)
+            switchToPostTab(value.post_text);
+		})
+	});
 }
 
 var initSystem = function(){
@@ -406,6 +438,7 @@ var filterCB = function(data) {
 	endLoadingDisplay();
 	document.getElementById("mapVis").innerHTML = "";
 	renderMapData("mapVis", all_data);
+	updatePostsList(data);
 }
 
 var hashtagCB = function(data) {

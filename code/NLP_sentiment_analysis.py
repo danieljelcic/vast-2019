@@ -8,8 +8,8 @@ from google.cloud.language import types
 # Instantiates a client
 client = language.LanguageServiceClient()
 
-#
-data = np.genfromtxt('data.csv', delimiter='","', skip_header=1, dtype='str', encoding='utf-8', comments=None)
+# Generating Data
+data = np.genfromtxt('../static/data/data.csv', delimiter='","', skip_header=1, dtype='str', encoding='utf-8', comments=None)
 
 def clean_lt_double_quotes(data):
     for i in range(data.shape[0]):
@@ -24,12 +24,11 @@ def clean_lt_double_quotes(data):
 
 clean_lt_double_quotes(data)
 
-#--------------------#
-#     File I/O
 
-with open("sentiment_data.csv", "w") as writer:
-    for line in data:
-        line = line[3]
+# Calculates sentiment score and writes results to a file
+with open("../static/data/sentiment-data.csv", "w") as writer:
+    for info in data:
+        line = info[3]
         print(line)
         document = types.Document(
             content=line,
@@ -38,4 +37,4 @@ with open("sentiment_data.csv", "w") as writer:
         # Detects the sentiment of the text
         sentiment = client.analyze_sentiment(document=document).document_sentiment
         line = line.rstrip()
-        writer.writelines(str(line) + " " + str(sentiment.score) + " " + str(sentiment.magnitude) + "\n")
+        writer.writelines(str(sentiment.score) + ", " + str(sentiment.magnitude) + "\n")

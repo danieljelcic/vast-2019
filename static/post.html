@@ -9,13 +9,26 @@
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
     <style>
+
+    h1{
+        text-align: center;
+    }
+
+    h1, h3{
+        font-family: sans-serif;
+    }
+    p{ 
+        font-family: sans-serif;
+        font-size: 18px;
+    }
     .bar{fill: #FFAA32;}
     </style>
 
 </head>
 <body>
     <h1>POST DATA</h1>
-    <div id="post-text"></div>
+    <h3>Post text</h3><div id="post-text"></div>
+    <h3>Repost Activity per Neighbourhood</h3>
     <div id="post-viz"></div>
     <script>
 
@@ -54,7 +67,7 @@
         }
 
         var constructSQL_post = function(id) {
-            return `SELECT * FROM posts WHERE ID = ${6942}`;
+            return `SELECT * FROM posts WHERE ID = ${id}`;
         }
 
         var createviz = function(data) {
@@ -74,7 +87,7 @@
 
         var post_text = function(data){
 
-            var node = document.createElement("H2");        
+            var node = document.createElement("P");        
             var textnode = document.createTextNode(`${data[0].post_text}`); 
             node.appendChild(textnode);
 

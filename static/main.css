@@ -191,8 +191,8 @@ p {
 #timeSlider {
     margin-left: 0px;
     width: 100%;
-    /* position: relative;
-    left: 50%px; */
+    position: relative;
+    left: 50px;
 }
 
 #timeSlider, #timeSlider > .noUi-base > .noUi-origin > .noUi-handle {
@@ -216,8 +216,8 @@ p {
 }
 
 #timeSlider > .noUi-base > .noUi-origin > .noUi-handle-lower {
-    position: relative;
-    left: 70px;
+    /* position: relative;
+    left: 70px; */
 }
 
 #timeSlider > .noUi-base > .noUi-connects > .noUi-connect {
